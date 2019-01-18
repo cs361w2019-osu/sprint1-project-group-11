@@ -51,12 +51,13 @@ public class Game {
 
     private char randCol() {
         // TODO implement
-        return 'X';
+	String column = "ABCDEFGHIJ";
+	int x = (int)(Math.random()*10);
+        return column.charAt(x);
     }
 
     private int randRow() {
-        // TODO implement
-        return 0;
+	return (int)(Math.random()*10)+1;
     }
 
     private boolean randVertical() {
