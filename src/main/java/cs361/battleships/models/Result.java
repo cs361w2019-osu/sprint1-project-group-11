@@ -1,6 +1,18 @@
 package cs361.battleships.models;
 
 public class Result {
+	
+	@JsonProperty private Square location;
+	@JsonProperty private Ship ship;
+	@JsonProperty private AtackStatus result;
+
+	public Result() {
+	}
+
+	public Result(Square location) {
+		this.location = location;
+		result = AtackStatus.INVALID;
+	}
 
 	public AtackStatus getResult() {
 		//TODO implement
