@@ -50,7 +50,6 @@ public class Game {
     }
 
     private char randCol() {
-        // TODO implement
 	String column = "ABCDEFGHIJ";
 	int x = (int)(Math.random()*10);
         return column.charAt(x);
@@ -61,7 +60,8 @@ public class Game {
     }
 
     private boolean randVertical() {
-        // TODO implement
-        return false;
+	var d = Math.random();
+	if (d < 0.5)
+        	return false;
     }
 }
