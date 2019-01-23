@@ -37,7 +37,7 @@ public class Result {
 		return location;
 	}
 
-	public void setLocation(Square square) {
-		this.location = square;
+	public void setLocation(Square square){
+		location = square;
 	}
 }
