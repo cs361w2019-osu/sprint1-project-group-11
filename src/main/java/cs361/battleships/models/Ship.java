@@ -19,16 +19,13 @@ public class Ship {
 	{
 		this();
 		this.kind = kind;
-		if (kind == "Destroyer")
-		{
+		if (kind == "Minesweeper") {
 			size = 2;
 		}
-		else if ( kind == "Cruiser")
-		{
+		else if ( kind == "Destroyer") {
 			size = 3;
 		}
-		else if (kind == "Battleship")
-		{
+		else if (kind == "Battleship") {
 			size = 4;
 		}
 	}
@@ -39,10 +36,6 @@ public class Ship {
 	
 	public String getKind() {
 		return kind;
-	}
-	
-	public String getSize() {
-		return size;	
 	}
 
 	public void place(int row, char column, boolean isVertical) {			// Soft placement of the ship to see what squares it will occupy (does not actually place it on the board)
