@@ -68,6 +68,12 @@ public class Board {
 	public Result attack(int x, char y) {
 		Square attackSquare = new Square(x, y);
 		Result attackResult = new Result(attackSquare);
+		
+		if (x > 10 || x < 1 || y > 'J' || y < 'A') {
+			attackResult.setResult(AtackStatus.INVALID);
+			attacks.add(attackResult);
+			return attackResult;
+		}
 
 		for (int i = 0; i < attacks.size(); i++) {
 			if (attacks.get(i).getLocation().equals(attackSquare)) {
