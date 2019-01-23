@@ -15,26 +15,29 @@ public class Result {
 	}
 
 	public AtackStatus getResult() {
-		return atackstatus;
+		//TODO implement
+		return null;
 	}
 
 	public void setResult(AtackStatus result) {
-		Atackstatus atackstatus = result;
+		//TODO implement
 	}
 
 	public Ship getShip() {
-		return theShip;
+		//TODO implement
+		return null;
 	}
 
 	public void setShip(Ship ship) {
-		Ship theShip = ship;
+		//TODO implement
 	}
 
 	public Square getLocation() {
-		return location;
+		//TODO implement
+		return null;
 	}
 
 	public void setLocation(Square square) {
-		Square location = square;
+		//TODO implement
 	}
 }
