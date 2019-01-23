@@ -5,11 +5,14 @@ public class Square {
 
 	private int row;
 	private char column;
+	private boolean hit;
 
 	public Square() {
+		hit = false;
 	}
 
 	public Square(int row, char column) {
+		this();
 		this.row = row;
 		this.column = column;
 	}
@@ -21,7 +24,7 @@ public class Square {
 	public void setColumn(char column) {
 		this.column = column;
 	}
-	
+
 	public int getRow() {
 		return row;
 	}
@@ -29,4 +32,22 @@ public class Square {
 	public void setRow(int row) {
 		this.row = row;
 	}
+
+	public void hit() {
+		hit = true;
+	}
+
+	public boolean getHit() {
+		return hit;
+	}
+
+	public boolean equals(Square other) {
+		if (other.getRow() == this.row && other.getColumn() == this.column) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 }

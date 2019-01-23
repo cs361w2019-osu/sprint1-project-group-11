@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Ship {
 
@@ -14,18 +15,17 @@ public class Ship {
 	public Ship() {
 		occupiedSquares = new ArrayList<>();
 	}
-	
-	public Ship(String kind)
-	{
+
+	public Ship(String kind) {
 		this();
 		this.kind = kind;
-		if (kind == "Minesweeper") {
+		if (kind.equals("MINESWEEPER")) {
 			size = 2;
 		}
-		else if ( kind == "Destroyer") {
+		else if (kind.equals("DESTROYER")) {
 			size = 3;
 		}
-		else if (kind == "Battleship") {
+		else if (kind.equals("BATTLESHIP")) {
 			size = 4;
 		}
 	}
@@ -33,7 +33,7 @@ public class Ship {
 	public List<Square> getOccupiedSquares() {
 		return occupiedSquares;
 	}
-	
+
 	public String getKind() {
 		return kind;
 	}
@@ -51,18 +51,38 @@ public class Ship {
 		}
 	}
 
-	public Result hit(int x, char y) {							// Hits the ship with an attack and de-occupies the square at the attack location
-		Result hitResult = new Result(new Square(x, y));
+	public Result hit(int x, char y) {
+		Square targetLocation = new Square(x, y);
+		Result hitResult = new Result(targetLocation);
 
-		occupiedSquares = occupiedSquares.stream().filter(square -> square.getRow() != x && square.getColumn() != y).collect(Collectors.toList());		// Removes square that was attacked
+		Square attackedLocation = getOccupiedSquares().stream().filter(square -> square.equals(targetLocation)).findFirst().get();
 
-		if (occupiedSquares.size() == 0) {			// If the ship no longer occupies any squares, then it was sunk
-			hitResult.setResult(AtackStatus.SUNK);
+		if (attackedLocation.getHit()) {
+			hitResult.setResult(AtackStatus.INVALID);
+			return hitResult;
 		}
 		else {
-			hitResult.setResult(AtackStatus.HIT);
-		}
+			attackedLocation.hit();
+			hitResult.setShip(this);
 
-		return hitResult;
+			if (hasSunk()) {
+				hitResult.setResult(AtackStatus.SUNK);
+				return hitResult;
+			}
+
+			hitResult.setResult(AtackStatus.HIT);
+			return hitResult;
+		}
 	}
+
+
+	public boolean hasSunk() {
+		if (getOccupiedSquares().stream().allMatch(square -> square.getHit())) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 }
