@@ -1,7 +1,7 @@
 package cs361.battleships.models;
 
 public class Result {
-	
+
 	@JsonProperty private Square location;
 	@JsonProperty private Ship ship;
 	@JsonProperty private AtackStatus result;
@@ -15,26 +15,20 @@ public class Result {
 	}
 
 	public AtackStatus getResult() {
-		return result;
+		//TODO implement
+		return null;
 	}
-
 	public void setResult(AtackStatus result) {
-		this.result = result;
+		//TODO implement
 	}
-
 	public Ship getShip() {
-		return ship;
+		//TODO implement
+		return null;
 	}
-
 	public void setShip(Ship ship) {
-		this.ship = ship;
+		//TODO implement
 	}
-
 	public Square getLocation() {
-		return location;
+		//TODO implement
+		return null;
 	}
-
-	public void setLocation(Square square) {
-		location = square;
-	}
-}
