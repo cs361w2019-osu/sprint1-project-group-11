@@ -30,7 +30,7 @@ public class Board {
 		}
 		else {
 			for (int i = 0; i < ships.size(); i++) {			// Check to see if we have already placed a ship of same type
-				if (ships.get(i).getKind() == ship.getKind()) {
+				if (ships.get(i).getKind().equals(ship.getKind())) {
 					return false;
 				}
 			}
@@ -48,10 +48,12 @@ public class Board {
 			}
 
 			for (int i = 0; i < ships.size(); i++) {									// Check to see if ship overlaps with any other previously placed ships
-				Set<Square> newShipSquares = Set.copyOf(ship.getOccupiedSquares());
-				Set<Square> existingShipSquares = Set.copyOf((ships.get(i).getOccupiedSquares()));
-				if (Sets.intersection(newShipSquares, existingShipSquares).size() != 0) {
-					return false;
+				for (int j = 0; j < ships.get(i).getOccupiedSquares().size(); j++) {
+					for (int z = 0; z < newShip.getOccupiedSquares().size(); z++) {
+						if (ships.get(i).getOccupiedSquares().get(j).getRow() == newShip.getOccupiedSquares().get(z).getRow() && ships.get(i).getOccupiedSquares().get(j).getColumn() == newShip.getOccupiedSquares().get(z).getColumn()) {
+							return false;
+						}
+					}
 				}
 			}
 
@@ -64,17 +66,12 @@ public class Board {
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	public Result attack(int x, char y) {
-		Result attackResult = new Result(new Square(x, y));
+		Square attackSquare = new Square(x, y);
+		Result attackResult = new Result(attackSquare);
 
-		if (x > 10 || x < 1 || y > 'J' || y < 'A') {			// Check to see if attack is out of bounds
-			attackResult.setResult(AtackStatus.INVALID);
-			attacks.add(attackResult);
-			return attackResult;
-		}
-
-		for (int i = 0; i < attacks.size(); i++) {				// Check to see if we have already made this attack before
-			if ((attacks.get(i).getLocation().getColumn() == y) && (attacks.get(i).getLocation().getRow() == x)) {
-				attackResult.setResult(AtackStatus.INVALID);
+		for (int i = 0; i < attacks.size(); i++) {
+			if (attacks.get(i).getLocation().equals(attackSquare)) {
+				attackResult.setResult((AtackStatus.INVALID));
 				attacks.add(attackResult);
 				return attackResult;
 			}
@@ -82,36 +79,31 @@ public class Board {
 
 		List<Ship> targetShips = new ArrayList<>();
 
-		for (int i = 0; i < ships.size(); i++) {				// Grabs any ship that is at desired attack location
-			List<Square> thisShipSquares = ships.get(i).getOccupiedSquares();
-			for (int j = 0; j < thisShipSquares.size(); j++) {
-				if (thisShipSquares.get(j).getRow() == x || thisShipSquares.get(j).getColumn() == y) {
+		for (int i = 0; i < ships.size(); i++) {
+			for (int j = 0; j < ships.get(i).getOccupiedSquares().size(); j++) {
+				if (ships.get(i).getOccupiedSquares().get(j).equals(attackSquare)) {
 					targetShips.add(ships.get(i));
 				}
 			}
 		}
 
-		if (targetShips.size() == 0) {						// Check to see if there is a ship at desired attack location
-			attackResult.setResult((AtackStatus.MISS));
+		if (targetShips.size() == 0) {
+			attackResult.setResult(AtackStatus.MISS);
 			attacks.add(attackResult);
 			return attackResult;
 		}
-
-		Ship hitShip = targetShips.get(0);
-
-		Result hitResult = hitShip.hit(x, y);				// Perform the attack on the ship (de-occupies the square)
-
-		if (hitResult.getResult() == AtackStatus.SUNK) {	// If the ship was sunk as a result of the attack, then check if all other ships are also sunk
-			if (ships.stream().allMatch(ship -> ship.getOccupiedSquares().size() == 0)) {		// If all other ships are sunk as well, then signal surrender
-				attackResult.setResult(AtackStatus.SURRENDER);
-			}
-		}
 		else {
-			attackResult.setResult(AtackStatus.HIT);
-		}
+			Ship targetShip = targetShips.get(0);
 
-		attacks.add(attackResult);
-		return attackResult;
+			Result hitResult = targetShip.hit(attackSquare.getRow(), attackSquare.getColumn());
+
+			if (ships.stream().allMatch(ship -> ship.hasSunk())) {
+				hitResult.setResult(AtackStatus.SURRENDER);
+			}
+
+			attacks.add(hitResult);
+			return hitResult;
+		}
 	}
 
 	public List<Ship> getShips() {
