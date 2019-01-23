@@ -19,11 +19,11 @@ public class Ship {
 	{
 		this();
 		this.kind = kind;
-		if (kind == "Destroyer")
+		if (kind == "Minesweeper")
 		{
 			size = 2;
 		}
-		else if ( kind == "Cruiser")
+		else if ( kind == "Destroyer")
 		{
 			size = 3;
 		}
@@ -33,7 +33,8 @@ public class Ship {
 		}
 	}
 
-	public List<Square> getOccupiedSquares() {
+	public List<Square> getOccupiedSquares() 
+	{
 		return occupiedSquares;
 	}
 	
