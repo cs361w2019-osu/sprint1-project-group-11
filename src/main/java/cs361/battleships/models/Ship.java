@@ -15,17 +15,34 @@ public class Ship {
 		occupiedSquares = new ArrayList<>();
 	}
 	
-	public Ship(String kind) {
-		//TODO implement
+	public Ship(String kind)
+	{
+		this();
+		this.kind = kind;
+		if (kind == "Destroyer")
+		{
+			size = 2;
+		}
+		else if ( kind == "Cruiser")
+		{
+			size = 3;
+		}
+		else if (kind == "Battleship")
+		{
+			size = 4;
+		}
 	}
 
 	public List<Square> getOccupiedSquares() {
-		//TODO implement
-		return null;
+		return occupiedSquares;
 	}
 	
 	public String getKind() {
 		return kind;
+	}
+	
+	public String getSize() {
+		return size;	
 	}
 
 	public void place(int row, char column, boolean isVertical) {			// Soft placement of the ship to see what squares it will occupy (does not actually place it on the board)
