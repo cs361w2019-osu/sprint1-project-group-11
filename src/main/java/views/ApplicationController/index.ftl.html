@@ -1,25 +1,50 @@
-<#import "../layout/defaultLayout.ftl.html" as layout> 
-<@layout.myLayout "Home page">    
+<#import "../layout/defaultLayout.ftl.html" as layout>
 
 
-<h1>The Battleship game</h1>
+<@layout.myLayout "Battleship">
 
-<table id="opponent" class="battleGrid">
-</table>
+<div class="game_container">
+  <div class="title">Battleship</div>
 
-<table id="player" class="battleGrid">
-</table>
+  <div class="game_holder">
+    <div class="grid_holder">
+      <div class="enemy_title">
+        Attack Enemy
+      </div>
+      <table id="opponent" class="battleGrid"></table>
+    </div>
 
-<ul>
-    <li><button id="place_minesweeper">Place Minesweeper</button></li>
-    <li><button id="place_destroyer">Place Destroyer</button></li>
-    <li><button id="place_battleship">Place Battleship</button></li>
-    <li><input type="checkbox" id="is_vertical">Vertical</input></li>
-</ul>
+    <div class="grid_holder">
+      <div class="you_title">
+        Your Ships
+      </div>
+      <table id="player" class="battleGrid"></table>
+    </div>
+
+    <div class="game_bottom">
+
+      <div class="game_info">
+        <img src="/assets/images/attack_key.png" width="60%">
+      </div>
+
+      <div class="game_buttons">
+        <button type="button" class="btn btn-outline-dark btn_col" id="place_minesweeper">Place Minesweeper</button>
+        <button type="button" class="btn btn-outline-dark btn_col" id="place_destroyer">Place Destroyer</button>
+        <button type="button" class="btn btn-outline-dark btn_col" id="place_battleship">Place Battleship</button>
+        <input type="checkbox" name="checkboxG1" class="btn_col css-checkbox" id="is_vertical"/><label for="is_vertical" class="css-label">VERTICAL</label>
+      </div>
+
+    </div>
+
+    <button type="button" class="btn btn-danger" id="restart_game"><i class="fas fa-redo"></i>RESTART GAME</button>
+
+  </div>
+</div>
 
 <script type="text/javascript" src="/assets/game.js"></script>
+
 <script>
-    initGame();
+  initGame();
 </script>
 
 </@layout.myLayout>
