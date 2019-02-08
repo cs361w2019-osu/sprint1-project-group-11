@@ -63,5 +63,8 @@ public class Game {
 	var d = Math.random();
 	if (d < 0.5)
         	return false;
+	else {
+		return true;
+	}
     }
 }
