@@ -156,9 +156,3 @@ function restartGame() {
 
 document.getElementById('restart_game').addEventListener('click', restartGame);
 
-function startGame() {
-    document.querySelector(".start_page").classList.add('goAway');
-    document.querySelector(".game_container").classList.remove('game_container');
-}
-
-document.querySelector('.start_game_button').addEventListener("click", startGame);
