@@ -143,3 +143,15 @@ function initGame() {
         game = data;
     });
 };
+
+
+function restartGame() {
+  isSetup = true;
+  placedShips = 0;
+  shipType = null;
+  document.getElementById('opponent').innerHTML = "";
+  document.getElementById('player').innerHTML = "";
+  initGame();
+}
+
+document.getElementById('restart_game').addEventListener('click', restartGame);
