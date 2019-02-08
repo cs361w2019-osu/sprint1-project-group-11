@@ -186,12 +186,10 @@ label.css-label {
     text-align: center;
     font-size: 140px;
     font-weight: 800;
-    font-family: default;
     letter-spacing: 10px;
     color: #000;
-   /* border: 5px solid #ccc;*/
-    width: 1000px;
     margin: 0 auto;
+    margin-top: 100px;
 }
 
 .start_page {
@@ -201,7 +199,7 @@ label.css-label {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    position: relative;
+    text-align: center;
 }
 
 .fullscreen {
@@ -211,18 +209,9 @@ label.css-label {
   bottom: 0;
   right: 0;
   overflow: auto;
-
 }
 
-.ship1{
-    position: absolute;
-    top: 40%;
-    left: 30%
-
-}
-
-.start_game_button{
-    position: relative;
+.start_game_button {
     background-color: #000;
     border: none;
     color: white;
@@ -232,14 +221,16 @@ label.css-label {
     display: inline-block;
     font-size: 40px;
     margin-top: 10%;
-    left: 44%;
+    width: 300px;
+    border-radius: 10px;
 }
 
-.start_game_button:hover{
+.start_game_button:hover {
     background-color: white;
     color: #000;
+    cursor: pointer;
 }
 
-.goAway{
+.goAway {
     display: none;
 }
