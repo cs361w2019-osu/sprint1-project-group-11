@@ -51,6 +51,14 @@ td:hover {
     background-color: blue;
 }
 
+.sonar_hit {
+  background-color: black;
+}
+
+.sonar_miss {
+  background-color: #b6b6b6;
+}
+
 .container {
   text-align: center;
 }
@@ -163,7 +171,7 @@ label.css-label {
   text-transform: uppercase;
   font-size: 24px;
   width: 400px;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 #place_minesweeper {
