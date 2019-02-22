@@ -68,20 +68,34 @@ public class Board {
 	public Result attack(int x, char y) {
 		Square attackSquare = new Square(x, y);
 		Result attackResult = new Result(attackSquare);
-		
+
 		if (x > 10 || x < 1 || y > 'J' || y < 'A') {
 			attackResult.setResult(AtackStatus.INVALID);
 			attacks.add(attackResult);
 			return attackResult;
 		}
 
+
+		List<Square> captainSquares = new ArrayList<>();
+
+		for (int i = 0; i < ships.size(); i++) {
+			for (int j = 0; j < ships.get(i).getOccupiedSquares().size(); j++) {
+				if (ships.get(i).getOccupiedSquares().get(j).getisCaptain()) {
+					captainSquares.add(ships.get(i).getOccupiedSquares().get(j));
+				}
+			}
+		}
+
+
 		for (int i = 0; i < attacks.size(); i++) {
-			if (attacks.get(i).getLocation().equals(attackSquare)) {
+			if (attacks.get(i).getLocation().equals(attackSquare) && !captainSquares.stream().anyMatch(square -> square.equals(attackSquare))) {
 				attackResult.setResult((AtackStatus.INVALID));
 				attacks.add(attackResult);
 				return attackResult;
 			}
 		}
+
+
 
 		List<Ship> targetShips = new ArrayList<>();
 
@@ -102,6 +116,23 @@ public class Board {
 			Ship targetShip = targetShips.get(0);
 
 			Result hitResult = targetShip.hit(attackSquare.getRow(), attackSquare.getColumn());
+
+			if (hitResult.getResult() == AtackStatus.SUNK) {
+				for (int j = 0; j < targetShip.getOccupiedSquares().size(); j++) {
+					for (int i = 0; i < attacks.size(); i++) {
+						if (attacks.get(i).getLocation().equals(targetShip.getOccupiedSquares().get(j))) {
+							attacks.remove(i);
+							i--;
+						}
+					}
+					Square newSquare = new Square(targetShip.getOccupiedSquares().get(j).getRow(), targetShip.getOccupiedSquares().get(j).getColumn());
+					Result newAttack = new Result(newSquare);
+					newAttack.setResult(AtackStatus.HIT);
+					attacks.add(newAttack);
+				}
+
+
+			}
 
 			if (ships.stream().allMatch(ship -> ship.hasSunk())) {
 				hitResult.setResult(AtackStatus.SURRENDER);
