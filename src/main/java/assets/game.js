@@ -3,6 +3,21 @@ var placedShips = 0;
 var game;
 var shipType;
 var vertical;
+var usingSonar = 0;
+var sonarAvailable = 2;
+
+let map = {
+  'A': 1,
+  'B': 2,
+  'C': 3,
+  'D': 4,
+  'E': 5,
+  'F': 6,
+  'G': 7,
+  'H': 8,
+  'I': 9,
+  'J': 10
+}
 
 function makeGrid(table, isPlayer) {
     for (i=0; i<10; i++) {
@@ -75,7 +90,114 @@ function cellClick() {
                 registerCellListener((e) => {});
             }
         });
-    } else {
+    }
+    else if (usingSonar === 1) {
+      if (sonarAvailable > 0) {
+        sendXhr("POST", "/sonar", {game: game, x: row, y: col}, function(data) {
+            if (data === 0) {
+              alert("Error:\n You must first sink an enemy ship before you can use sonar!");
+              usingSonar = 0;
+            }
+            else {
+
+              let x = row - 1;
+              let y = map[col] - 1;
+
+              let rows = document.getElementById('opponent').childNodes;
+
+              rows[x].childNodes[y].classList.add('sonar_miss');
+
+              if (rows[x - 2]) {
+                if (rows[x - 2].childNodes[y]) {
+                  rows[x - 2].childNodes[y].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x - 1]) {
+                if (rows[x - 1].childNodes[y - 1]) {
+                  rows[x - 1].childNodes[y - 1].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x - 1]) {
+                if (rows[x - 1].childNodes[y]) {
+                  rows[x - 1].childNodes[y].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x + 1]) {
+                if (rows[x + 1].childNodes[y + 1]) {
+                  rows[x + 1].childNodes[y + 1].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x]) {
+                if (rows[x].childNodes[y - 2]) {
+                  rows[x].childNodes[y - 2].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x]) {
+                if (rows[x].childNodes[y - 1]) {
+                  rows[x].childNodes[y - 1].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x]) {
+                if (rows[x].childNodes[y + 1]) {
+                  rows[x].childNodes[y + 1].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x]) {
+                if (rows[x].childNodes[y + 2]) {
+                  rows[x].childNodes[y + 2].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x + 1]) {
+                if (rows[x + 1].childNodes[y - 1]) {
+                  rows[x + 1].childNodes[y - 1].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x + 1]) {
+                if (rows[x + 1].childNodes[y]) {
+                  rows[x + 1].childNodes[y].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x + 2]) {
+                if (rows[x + 2].childNodes[y]) {
+                  rows[x + 2].childNodes[y].classList.add('sonar_miss');
+                }
+              }
+
+              if (rows[x - 1]) {
+                if (rows[x - 1].childNodes[y + 1]) {
+                  rows[x - 1].childNodes[y + 1].classList.add('sonar_miss');
+                }
+              }
+
+
+              for (let i = 0; i < data.length; i++) {
+                rows[data[i].row - 1].childNodes[map[data[i].column] - 1].classList.remove('sonar_miss');
+                rows[data[i].row - 1].childNodes[map[data[i].column] - 1].classList.add('sonar_hit');
+              }
+
+              setTimeout(redrawGrid, 10000);
+
+              sonarAvailable--;
+              usingSonar = 0;
+            }
+        });
+      }
+      else {
+        usingSonar = 0;
+        alert("Error:\n You've already used sonar twice this game!");
+      }
+    }
+    else {
         sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
             game = data;
             redrawGrid();
@@ -87,7 +209,7 @@ function sendXhr(method, url, data, handler) {
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(event) {
         if (req.status != 200) {
-            alert("Cannot complete the action");
+            alert("Error:\n Ships cannot be placed on top of each other.\n Same square cannot be attacked twice.\n Cannot place ships off the grid!");
             return;
         }
         handler(JSON.parse(req.responseText));
@@ -143,3 +265,37 @@ function initGame() {
         game = data;
     });
 };
+
+
+
+document.getElementById('sonar_button').addEventListener('click', function() {
+  if (usingSonar === 0) {
+    usingSonar = 1;
+  }
+  else {
+    usingSonar = 0;
+  }
+});
+
+
+
+
+
+function restartGame() {
+  isSetup = true;
+  placedShips = 0;
+  shipType = null;
+  sonarAvailable = 2;
+  document.getElementById('opponent').innerHTML = "";
+  document.getElementById('player').innerHTML = "";
+  initGame();
+}
+
+document.getElementById('restart_game').addEventListener('click', restartGame);
+
+function startGame() {
+    document.querySelector(".start_page").classList.add('goAway');
+    document.querySelector(".game_container").classList.remove('game_container');
+}
+
+document.querySelector('.start_game_button').addEventListener("click", startGame);

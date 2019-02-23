@@ -1,23 +1,34 @@
 /* Add additional stylesheets below
 -------------------------------------------------- */
+html {
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+}
 
 .battleGrid {
-    border: 1px solid black;
     border-spacing: 0px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border: 3px solid;
+    border-radius: 5px;
+    background-image: url(/assets/images/wave.webp);
 }
 
 .battleGrid tr {
     border: 1px solid black;
     height: 30px;
+    border-radius: 3px;
 }
 
 .battleGrid td {
     border: 1px solid black;
     width: 30px;
+    border-radius: 3px;
 }
 
 td:hover {
     background-color: gray;
+    cursor: pointer;
 }
 
 .placed {
@@ -38,4 +49,196 @@ td:hover {
 
 .miss {
     background-color: blue;
+}
+
+.sonar_hit {
+  background-color: black;
+}
+
+.sonar_miss {
+  background-color: #b6b6b6;
+}
+
+.container {
+  text-align: center;
+}
+
+.title {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 700;
+  font-size: 72px;
+  margin-top: 5px;
+}
+
+.enemy_title {
+  color: rgb(222, 8, 27);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.you_title {
+  color: rgb(13, 196, 42);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.grid_holder {
+  display: inline-block;
+  margin: 40px;
+  margin-bottom: 0;
+}
+
+.game_bottom {
+  height: 250px;
+}
+
+.game_info {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: 70px;
+}
+
+.game_buttons {
+  display: inline-block;
+  margin-right: 50px;
+  margin-left: 50px;
+}
+
+.btn {
+  font-weight: 700;
+  width: 200px;
+}
+
+.btn_col {
+  display: block;
+  margin: 10px auto;
+  text-align: center;
+}
+
+input[type=checkbox].css-checkbox {
+	position: absolute;
+  z-index: -1000;
+  left: -1000px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+	padding-left: 55px;
+	height: 50px;
+	display: inline-block;
+	line-height: 50px;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	font-size: 32px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+	background-position: 0 -50px;
+}
+
+label.css-label {
+  margin-top: 20px;
+  font-weight: 600;
+  background-image: url(http://csscheckbox.com/checkboxes/u/csscheckbox_e0446eb8ecbe9ca1cca1aacf581883cb.png);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.fas {
+  margin-right: 10px;
+}
+
+#restart_game {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 24px;
+  width: 400px;
+  margin-top: 60px;
+}
+
+#place_minesweeper {
+  font-size: 18px;
+}
+
+#place_destroyer {
+  font-size: 18px;
+}
+
+#place_battleship {
+  font-size: 18px;
+}
+
+.game_container {
+    display: none;
+}
+
+.start_title {
+    text-align: center;
+    font-size: 140px;
+    font-weight: 800;
+    letter-spacing: 10px;
+    color: #000;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+.start_page {
+    background-image: url(/assets/images/wave.webp);
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+}
+
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+}
+
+.start_game_button {
+    background-color: #000;
+    border: none;
+    color: white;
+    padding: 20px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 40px;
+    margin-top: 10%;
+    width: 300px;
+    border-radius: 10px;
+}
+
+.start_game_button:hover {
+    background-color: white;
+    color: #000;
+    cursor: pointer;
+}
+
+.goAway {
+    display: none;
 }

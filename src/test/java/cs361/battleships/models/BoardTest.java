@@ -11,6 +11,7 @@ public class BoardTest {
     public void testInvalidPlacement() {
         Board board = new Board();
         assertFalse(board.placeShip(new Ship("MINESWEEPER"), 11, 'C', true));
+        
     }
     
     @Test
@@ -25,12 +26,24 @@ public class BoardTest {
         assertTrue(board.placeShip(new Ship("MINESWEEPER"), 4, 'E', true));
         assertFalse(board.placeShip(new Ship("BATTLESHIP"), 4, 'E', true));
     }
+  
 	
-	@Test 
-	public void testCaptainQuarters() {
-		Board board = new Board();
-		assertTrue(board.placeShip(new Ship("MINESWEEPER"), 4, 'E', true));
-		assertTrue(board.attack(4, 'E').getResult() == AtackStatus.SUNK);
-	}
+    @Test 
+    public void testCaptainQuarters() {
+      Board board = new Board();
+      assertTrue(board.placeShip(new Ship("MINESWEEPER"), 4, 'E', true));
+      assertTrue(board.attack(4, 'E').getResult() == AtackStatus.SUNK);
+    }
 	
+    
+    @Test
+     public void testAttackSunk() 
+     {
+        Board board = new Board();
+        board.placeShip(new Ship("MINESWEEPER"), 4, 'E', true);
+        board.placeShip(new Ship("DESTROYER"), 1, 'A', true);
+        board.attack(4, 'E');
+        assertTrue(board.attack(5, 'E').getResult() == AtackStatus.SUNK);
+    }
+
 }

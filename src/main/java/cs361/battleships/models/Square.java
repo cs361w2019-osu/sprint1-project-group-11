@@ -6,6 +6,7 @@ public class Square {
 	private int row;
 	private char column;
 	private boolean hit;
+	private boolean isCaptain = false;
 
 	public Square() {
 		hit = false;
@@ -41,6 +42,14 @@ public class Square {
 		return hit;
 	}
 
+	public void setCaptain() {
+		isCaptain = true;
+	}
+
+	public boolean getisCaptain() {
+		return isCaptain;
+	}
+
 	public boolean equals(Square other) {
 		if (other.getRow() == this.row && other.getColumn() == this.column) {
 			return true;
@@ -51,3 +60,4 @@ public class Square {
 	}
 
 }
+
