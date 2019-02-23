@@ -1,6 +1,5 @@
 package cs361.battleships.models;
 
-//import cs361.battleships.ShipFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
