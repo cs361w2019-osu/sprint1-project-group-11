@@ -29,7 +29,7 @@ public class BoardTest {
 	@Test 
 	public void testCaptainQuarters() {
 		Board board = new Board();
-		assertTrue(board.placeShip(new Ship("DESTROYER"), 4, 'E', true));
+		assertTrue(board.placeShip(new Ship("MINESWEEPER"), 4, 'E', true));
 		assertTrue(board.attack(4, 'E').getResult() == AtackStatus.SUNK);
 	}
 	
