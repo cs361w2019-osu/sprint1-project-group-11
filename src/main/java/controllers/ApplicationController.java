@@ -48,49 +48,10 @@ public class ApplicationController {
     public Result sonar(Context context, AttackGameAction g) {
 
         if (g.getGame().otherShips().stream().anyMatch(ship -> ship.hasSunk())) {
-
-            List<Square> occupiedSquares = new ArrayList<>();
-            List<Square> sonarSquares = new ArrayList<>();
-            List<Square> matchedSquares = new ArrayList<>();
-
-            int targetRow = g.getActionRow();
-            char targetCol = g.getActionColumn();
-
-            for (int i = 0; i < g.getGame().otherShips().size(); i++) {
-                for (int j = 0; j < g.getGame().otherShips().get(i).getOccupiedSquares().size(); j++) {
-                    occupiedSquares.add(g.getGame().otherShips().get(i).getOccupiedSquares().get(j));
-                }
-            }
-
-            sonarSquares.add(new Square(targetRow - 2, targetCol));
-            sonarSquares.add(new Square(targetRow - 1, targetCol));
-            sonarSquares.add(new Square(targetRow, targetCol));
-            sonarSquares.add(new Square(targetRow + 1, targetCol));
-            sonarSquares.add(new Square(targetRow + 2, targetCol));
-
-            sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol + 1)));
-            sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 1)));
-            sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol + 1)));
-            sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 2)));
-
-            sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol - 1)));
-            sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 1)));
-            sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol - 1)));
-            sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 2)));
-
-            for (int i = 0; i < occupiedSquares.size(); i++) {
-                for (int j = 0; j < sonarSquares.size(); j++) {
-                    if (occupiedSquares.get(i).equals(sonarSquares.get(j))) {
-                        matchedSquares.add(occupiedSquares.get(i));
-                    }
-                }
-            }
-
-            return Results.json().render(matchedSquares);
+            return Results.json().render(g.getGame().getOpponentsBoard().sonar(g.getGame(), g.getActionRow(), g.getActionColumn()));
         }
         else {
             return Results.json().render(0);
         }
-
     }
 }
