@@ -16,26 +16,26 @@ public class GameTest {
 
 
     @Test
-    public void testBadplaceship(){ //
+    public void testBadBlaceShip(){ //
         Ship ship1 = new Ship("BATTLESHIP");
-        assertEquals(false,testgame.placeShip(shippy, 15, 'L', true));
+        assertEquals(false,testgame.placeShip(ship1, 15, 'L', true));
     }
 
     @Test
-    public void testGoodplaceship(){
+    public void testGoodPlaceShip(){
         Ship ship1 = new Ship("BATTLESHIP");
         assertEquals(true, gametwo.placeShip(ship1, 7, 'C', true));
     }
 
     @Test
-    public void testBadattack(){
+    public void testBadAttack(){
         Game game = new Game();
         assertFalse(game.attack(12, 'A'));
         assertFalse(game.attack(6,'L'));
     }
 
     @Test
-    public void testGoodattack(){
+    public void testGoodAttack(){
         Game game = new Game();
         assertTrue(game.attack(7, 'B'));
     }
@@ -46,7 +46,7 @@ public class GameTest {
         // setup a new game & add a ship
         Game g = new Game();
         Ship s = new Ship("DESTROYER");
-        assertTrue(g.placeShip(s,9,'J',false));
-        assertTrue(g.attack(9,'J'));
+        assertTrue(g.placeShip(s, 9, 'J', false));
+        assertTrue(g.attack(9, 'J'));
     }
 }

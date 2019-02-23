@@ -53,6 +53,11 @@ public class Game {
     public List<Ship> otherShips() {
         return opponentsBoard.getShips();
     }
+	
+	
+    public Board getOpponentsBoard() {
+        return opponentsBoard;
+    }
 
     private char randCol() {
         return (char) ('A' + new Random().nextInt(10));
