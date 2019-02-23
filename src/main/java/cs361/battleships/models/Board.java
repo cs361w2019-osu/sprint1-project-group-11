@@ -142,6 +142,49 @@ public class Board {
 			return hitResult;
 		}
 	}
+	
+		public List<Square> sonar(Game g, int x, char y) {
+
+			List<Square> occupiedSquares = new ArrayList<>();
+			List<Square> sonarSquares = new ArrayList<>();
+			List<Square> matchedSquares = new ArrayList<>();
+
+			int targetRow = x;
+			char targetCol = y;
+
+			for (int i = 0; i < g.otherShips().size(); i++) {
+				for (int j = 0; j < g.otherShips().get(i).getOccupiedSquares().size(); j++) {
+					occupiedSquares.add(g.otherShips().get(i).getOccupiedSquares().get(j));
+				}
+			}
+
+			sonarSquares.add(new Square(targetRow - 2, targetCol));
+			sonarSquares.add(new Square(targetRow - 1, targetCol));
+			sonarSquares.add(new Square(targetRow, targetCol));
+			sonarSquares.add(new Square(targetRow + 1, targetCol));
+			sonarSquares.add(new Square(targetRow + 2, targetCol));
+
+			sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 2)));
+
+			sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 2)));
+
+			for (int i = 0; i < occupiedSquares.size(); i++) {
+				for (int j = 0; j < sonarSquares.size(); j++) {
+					if (occupiedSquares.get(i).equals(sonarSquares.get(j))) {
+						matchedSquares.add(occupiedSquares.get(i));
+					}
+				}
+			}
+
+			return matchedSquares;
+
+	}
 
 	public List<Ship> getShips() {
 		return ships;
