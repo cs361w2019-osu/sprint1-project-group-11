@@ -45,5 +45,36 @@ public class BoardTest {
         board.attack(4, 'E');
         assertTrue(board.attack(5, 'E').getResult() == AtackStatus.SUNK);
     }
+	
+	@Test
+	 public void testMoveShip()
+	 {
+		Board board = new Board ();
+		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveNorth();
+	 }
+	 
+	@Test
+	 public void testMoveShip()
+	 {
+		Board board = new Board ();
+		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveSouth();
+	 }
 
+	@Test
+	 public void testMoveShip()
+	 {
+		Board board = new Board ();
+		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveEast();
+	 }
+	
+	@Test
+	 public void testMoveShip()
+	 {
+		Board board = new Board ();
+		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveWest();
+	 }
 }
