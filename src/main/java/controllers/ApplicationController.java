@@ -10,6 +10,8 @@ import ninja.Results;
 import org.flywaydb.core.internal.util.logging.console.ConsoleLog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Singleton
@@ -27,7 +29,10 @@ public class ApplicationController {
     public Result placeShip(Context context, PlacementGameAction g) {
         Game game = g.getGame();
         Ship ship = new Ship(g.getShipType());
-        boolean result = game.placeShip(ship, g.getActionRow(), g.getActionColumn(), g.isVertical());
+        if (g.getisSubmerged() && !g.getShipType().equals("SUBMARINE")) {
+            return Results.badRequest();
+        }
+        boolean result = game.placeShip(ship, g.getActionRow(), g.getActionColumn(), g.isVertical(), g.getisSubmerged());
         if (result) {
             return Results.json().render(game);
         } else {
@@ -38,6 +43,7 @@ public class ApplicationController {
     public Result attack(Context context, AttackGameAction g) {
         Game game = g.getGame();
         boolean result = game.attack(g.getActionRow(), g.getActionColumn());
+
         if (result) {
             return Results.json().render(game);
         } else {
@@ -46,7 +52,6 @@ public class ApplicationController {
     }
 
     public Result sonar(Context context, AttackGameAction g) {
-
         if (g.getGame().otherShips().stream().anyMatch(ship -> ship.hasSunk())) {
             return Results.json().render(g.getGame().getOpponentsBoard().sonar(g.getGame(), g.getActionRow(), g.getActionColumn()));
         }
@@ -54,4 +59,34 @@ public class ApplicationController {
             return Results.json().render(0);
         }
     }
+
+    public Result moveN(Context context, AttackGameAction g) {
+        Game game = g.getGame();
+        game.moveN();
+        return Results.json().render(game);
+    }
+
+    public Result moveE(Context context, AttackGameAction g) {
+        Game game = g.getGame();
+        game.moveE();
+        return Results.json().render(game);
+    }
+
+    public Result moveS(Context context, AttackGameAction g) {
+        Game game = g.getGame();
+        game.moveS();
+        return Results.json().render(game);
+    }
+
+    public Result moveW(Context context, AttackGameAction g) {
+        Game game = g.getGame();
+        game.moveW();
+        return Results.json().render(game);
+    }
+
+
+
+
+
+
 }
