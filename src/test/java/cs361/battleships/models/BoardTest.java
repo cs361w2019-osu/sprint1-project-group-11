@@ -44,6 +44,43 @@ public class BoardTest {
         board.attack(4, 'E');
         assertTrue(board.attack(5, 'E').getResult() == AtackStatus.SUNK);
     }
+	
+	@Test
+	 public void testMoveNorth()
+	 {
+		Board board = new Board ();
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveNorth();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getColumn() == 'D');
+	 }
+	 
+	@Test
+	 public void testMoveSouth()
+	 {
+		Board board = new Board ();
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveSouth();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getColumn() == 'F');
+	 }
+
+
+	@Test
+	 public void testMoveEast()
+	 {
+		Board board = new Board ();
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveEast();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getRow() == 5);
+	 }
+	
+	@Test
+	 public void testMoveWest()
+	 {
+		Board board = new Board ();
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
+		moveWest();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getRow() == 3);
+	 }
 
     @Test
     public void testSonar() {
@@ -53,5 +90,6 @@ public class BoardTest {
         assertTrue(g.getOpponentsBoard().sonar(g, 10, 'E').size() == 0);
 
     }
+
 
 }
