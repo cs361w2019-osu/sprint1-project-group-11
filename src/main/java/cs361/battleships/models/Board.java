@@ -3,14 +3,13 @@ package cs361.battleships.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Board {
 
 	@JsonProperty private List<Ship> ships;
 	@JsonProperty private List<Result> attacks;
+	@JsonProperty private int moveCmdsAvailable = 2;
 
 
 	/*
@@ -24,8 +23,8 @@ public class Board {
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
-	public boolean placeShip(Ship ship, int x, char y, boolean isVertical) {
-		if (ships.size() >= 3) {			// Check to see if we have already placed at least 3 ships
+	public boolean placeShip(Ship ship, int x, char y, boolean isVertical, boolean isSubmerged) {
+		if (ships.size() >= 4) {			// Check to see if we have already placed at least 4 ships
 			return false;
 		}
 		else {
@@ -36,7 +35,7 @@ public class Board {
 			}
 
 			Ship newShip = new Ship(ship.getKind());
-			newShip.place(x, y, isVertical);
+			newShip.place(x, y, isVertical, isSubmerged);
 
 			List<Square> newShipOccupiedSquares = newShip.getOccupiedSquares();
 			for (int i = 0; i < newShipOccupiedSquares.size(); i++) {				// Check to see if ship goes out of bounds from placing at desired location
@@ -50,7 +49,7 @@ public class Board {
 			for (int i = 0; i < ships.size(); i++) {									// Check to see if ship overlaps with any other previously placed ships
 				for (int j = 0; j < ships.get(i).getOccupiedSquares().size(); j++) {
 					for (int z = 0; z < newShip.getOccupiedSquares().size(); z++) {
-						if (ships.get(i).getOccupiedSquares().get(j).getRow() == newShip.getOccupiedSquares().get(z).getRow() && ships.get(i).getOccupiedSquares().get(j).getColumn() == newShip.getOccupiedSquares().get(z).getColumn()) {
+						if (ships.get(i).getOccupiedSquares().get(j).equals(newShip.getOccupiedSquares().get(z)) && ships.get(i).getOccupiedSquares().get(j).getSubmerged() == newShip.getOccupiedSquares().get(z).getSubmerged()) {
 							return false;
 						}
 					}
@@ -69,6 +68,12 @@ public class Board {
 		Square attackSquare = new Square(x, y);
 		Result attackResult = new Result(attackSquare);
 
+		boolean spaceLaserActive = false;
+
+		if (ships.stream().anyMatch(ship -> ship.hasSunk())) {
+			spaceLaserActive = true;
+		}
+
 		if (x > 10 || x < 1 || y > 'J' || y < 'A') {
 			attackResult.setResult(AtackStatus.INVALID);
 			attacks.add(attackResult);
@@ -86,22 +91,11 @@ public class Board {
 			}
 		}
 
-
-		for (int i = 0; i < attacks.size(); i++) {
-			if (attacks.get(i).getLocation().equals(attackSquare) && !captainSquares.stream().anyMatch(square -> square.equals(attackSquare))) {
-				attackResult.setResult((AtackStatus.INVALID));
-				attacks.add(attackResult);
-				return attackResult;
-			}
-		}
-
-
-
 		List<Ship> targetShips = new ArrayList<>();
 
 		for (int i = 0; i < ships.size(); i++) {
 			for (int j = 0; j < ships.get(i).getOccupiedSquares().size(); j++) {
-				if (ships.get(i).getOccupiedSquares().get(j).equals(attackSquare)) {
+				if (ships.get(i).getOccupiedSquares().get(j).equals(attackSquare) && (spaceLaserActive || !ships.get(i).getOccupiedSquares().get(j).getSubmerged())) {
 					targetShips.add(ships.get(i));
 				}
 			}
@@ -113,25 +107,37 @@ public class Board {
 			return attackResult;
 		}
 		else {
-			Ship targetShip = targetShips.get(0);
 
-			Result hitResult = targetShip.hit(attackSquare.getRow(), attackSquare.getColumn());
+			Result hitResult = new Result();
 
-			if (hitResult.getResult() == AtackStatus.SUNK) {
-				for (int j = 0; j < targetShip.getOccupiedSquares().size(); j++) {
+			for (int z = 0; z < targetShips.size(); z++) {
+				Ship targetShip = targetShips.get(z);
+
+				hitResult = targetShip.hit(attackSquare.getRow(), attackSquare.getColumn());
+
+				if (hitResult.getResult() == AtackStatus.SUNK) {
+					for (int j = 0; j < targetShip.getOccupiedSquares().size(); j++) {
+						for (int i = 0; i < attacks.size(); i++) {
+							if (attacks.get(i).getLocation().equals(targetShip.getOccupiedSquares().get(j))) {
+								attacks.remove(i);
+								i--;
+							}
+						}
+						Square newSquare = new Square(targetShip.getOccupiedSquares().get(j).getRow(), targetShip.getOccupiedSquares().get(j).getColumn());
+						Result newAttack = new Result(newSquare);
+						newAttack.setResult(AtackStatus.HIT);
+						attacks.add(newAttack);
+					}
+				}
+				else if (hitResult.getResult() == AtackStatus.HIT) {
 					for (int i = 0; i < attacks.size(); i++) {
-						if (attacks.get(i).getLocation().equals(targetShip.getOccupiedSquares().get(j))) {
-							attacks.remove(i);
-							i--;
+						if (attacks.get(i).getLocation().equals(attackSquare)) {
+							if (attacks.get(i).getResult() == AtackStatus.MISS) {
+								attacks.remove(i);
+							}
 						}
 					}
-					Square newSquare = new Square(targetShip.getOccupiedSquares().get(j).getRow(), targetShip.getOccupiedSquares().get(j).getColumn());
-					Result newAttack = new Result(newSquare);
-					newAttack.setResult(AtackStatus.HIT);
-					attacks.add(newAttack);
 				}
-
-
 			}
 
 			if (ships.stream().allMatch(ship -> ship.hasSunk())) {
@@ -142,8 +148,8 @@ public class Board {
 			return hitResult;
 		}
 	}
-	
-		public List<Square> sonar(Game g, int x, char y) {
+
+	public List<Square> sonar(Game g, int x, char y) {
 
 			List<Square> occupiedSquares = new ArrayList<>();
 			List<Square> sonarSquares = new ArrayList<>();
@@ -201,7 +207,7 @@ public class Board {
 	public void setAttacks(List<Result> attacks) {
 		this.attacks = attacks;
 	}
-	
+
 	public List<Ship> moveNorth() {
 
 		List<Ship> playerShips = ships;
@@ -459,4 +465,13 @@ public class Board {
 
 		return playerShips;
 	}
+
+
+
+
+
+
+
+
+
 }
