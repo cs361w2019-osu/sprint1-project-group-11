@@ -8,7 +8,7 @@ public class ShipTest {
 
     @Test
     public void testSize() {
-
+        
         Ship ship1 = new Ship("BATTLESHIP");
         assertEquals(4, ship1.getOccupiedSquares().size());
 
@@ -17,6 +17,10 @@ public class ShipTest {
 
         Ship ship3 = new Ship("MINESWEEPER");
         assertEquals(2, ship3.getOccupiedSquares().size());
+        
+        Ship ship4 = new Ship("SUBMARINE");
+        assertEquals(5, ship4.getOccupiedSquares().size());
+        
 
     }
 }
