@@ -5,6 +5,8 @@ var shipType;
 var vertical;
 var usingSonar = 0;
 var sonarAvailable = 2;
+var submergeSub = false;
+var unlockedLaser = false;
 
 let map = {
   'A': 1,
@@ -81,11 +83,11 @@ function cellClick() {
     let row = this.parentNode.rowIndex + 1;
     let col = String.fromCharCode(this.cellIndex + 65);
     if (isSetup) {
-        sendXhr("POST", "/place", {game: game, shipType: shipType, x: row, y: col, isVertical: vertical}, function(data) {
+        sendXhr("POST", "/place", {game: game, shipType: shipType, x: row, y: col, isVertical: vertical, isSubmerged: document.getElementById("submerge_button").checked}, function(data) {
             game = data;
             redrawGrid();
             placedShips++;
-            if (placedShips == 3) {
+            if (placedShips == 4) {
                 isSetup = false;
                 registerCellListener((e) => {});
             }
@@ -201,6 +203,20 @@ function cellClick() {
         sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
             game = data;
             redrawGrid();
+            if (!unlockedLaser) {
+              for (let i = 0; i < game.opponentsBoard.ships.length; i++) {
+                let amountHit = 0;
+                for (let j = 0; j < game.opponentsBoard.ships[i].occupiedSquares.length; j++) {
+                  if (game.opponentsBoard.ships[i].occupiedSquares[j].hit == true) {
+                    amountHit++;
+                  }
+                }
+                if (amountHit == game.opponentsBoard.ships[i].occupiedSquares.length) {
+                  alert("You've sunk a ship! You now have access to the Space Laser! The Space Laser can hit submerged submarines!");
+                  unlockedLaser = true;
+                }
+              }
+            }
         })
     }
 }
@@ -209,7 +225,7 @@ function sendXhr(method, url, data, handler) {
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(event) {
         if (req.status != 200) {
-            alert("Error:\n Ships cannot be placed on top of each other.\n Same square cannot be attacked twice.\n Cannot place ships off the grid!");
+            alert("Error:\n Ships cannot be placed on top of each other.\n Cannot place ships off the grid!");
             return;
         }
         handler(JSON.parse(req.responseText));
@@ -225,23 +241,115 @@ function place(size) {
         let col = this.cellIndex;
         vertical = document.getElementById("is_vertical").checked;
         let table = document.getElementById("player");
-        for (let i=0; i<size; i++) {
-            let cell;
-            if(vertical) {
-                let tableRow = table.rows[row+i];
-                if (tableRow === undefined) {
-                    // ship is over the edge; let the back end deal with it
-                    break;
-                }
-                cell = tableRow.cells[col];
-            } else {
-                cell = table.rows[row].cells[col+i];
+        if (size == 5) {
+          if (vertical) {
+
+            let cell1, cell2, cell3, cell4, cell5 = undefined;
+
+            if (table.rows[row + 1]) {
+              cell2 = table.rows[row + 1].cells[col];
             }
-            if (cell === undefined) {
-                // ship is over the edge; let the back end deal with it
-                break;
+
+            if (table.rows[row + 2]) {
+              cell3 = table.rows[row + 2].cells[col];
             }
-            cell.classList.toggle("placed");
+
+            if (table.rows[row + 3]) {
+              cell4 = table.rows[row + 3].cells[col];
+            }
+
+            if (table.rows[row + 2]) {
+              if (table.rows[row + 2].cells[col + 1]) {
+                cell5 = table.rows[row + 2].cells[col + 1];
+              }
+            }
+
+            if (cell1) {
+              cell1.classList.toggle("placed");
+            }
+
+            if (cell2) {
+              cell2.classList.toggle("placed");
+            }
+
+            if (cell3) {
+              cell3.classList.toggle("placed");
+            }
+
+            if (cell4) {
+              cell4.classList.toggle("placed");
+            }
+
+            if (cell5) {
+              cell5.classList.toggle("placed");
+            }
+
+          }
+          else {
+
+            let cell1, cell2, cell3, cell4, cell5 = undefined;
+
+            cell1 = table.rows[row].cells[col];
+
+            if (table.rows[row].cells[col + 1]) {
+              cell2 = table.rows[row].cells[col + 1];
+            }
+
+            if (table.rows[row].cells[col + 2]) {
+              cell3 = table.rows[row].cells[col + 2];
+            }
+
+            if (table.rows[row].cells[col + 3]) {
+              cell4 = table.rows[row].cells[col + 3];
+            }
+
+            if (table.rows[row - 1]) {
+              if (table.rows[row - 1].cells[col + 2]) {
+                cell5 = table.rows[row - 1].cells[col + 2];
+              }
+            }
+
+            if (cell1) {
+              cell1.classList.toggle("placed");
+            }
+
+            if (cell2) {
+              cell2.classList.toggle("placed");
+            }
+
+            if (cell3) {
+              cell3.classList.toggle("placed");
+            }
+
+            if (cell4) {
+              cell4.classList.toggle("placed");
+            }
+
+            if (cell5) {
+              cell5.classList.toggle("placed");
+            }
+
+          }
+        }
+        else {
+          for (let i=0; i<size; i++) {
+              let cell;
+              if(vertical) {
+                  let tableRow = table.rows[row+i];
+                  if (tableRow === undefined) {
+                      // ship is over the edge; let the back end deal with it
+                      break;
+                  }
+                  cell = tableRow.cells[col];
+              } else {
+                  cell = table.rows[row].cells[col+i];
+              }
+              if (cell === undefined) {
+                  // ship is over the edge; let the back end deal with it
+                  break;
+              }
+              cell.classList.toggle("placed");
+          }
         }
     }
 }
@@ -261,6 +369,10 @@ function initGame() {
         shipType = "BATTLESHIP";
        registerCellListener(place(4));
     });
+    document.getElementById("place_submarine").addEventListener("click", function(e) {
+        shipType = "SUBMARINE";
+       registerCellListener(place(5));
+    });
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });
@@ -277,9 +389,33 @@ document.getElementById('sonar_button').addEventListener('click', function() {
   }
 });
 
+document.getElementById('move_north').addEventListener('click', function() {
+  sendXhr("POST", "/moveN", {game: game}, function(data) {
+    game = data;
+    redrawGrid();
+  });
+});
 
+document.getElementById('move_east').addEventListener('click', function() {
+  sendXhr("POST", "/moveE", {game: game}, function(data) {
+    game = data;
+    redrawGrid();
+  });
+});
 
+document.getElementById('move_south').addEventListener('click', function() {
+  sendXhr("POST", "/moveS", {game: game}, function(data) {
+    game = data;
+    redrawGrid();
+  });
+});
 
+document.getElementById('move_west').addEventListener('click', function() {
+  sendXhr("POST", "/moveW", {game: game}, function(data) {
+    game = data;
+    redrawGrid();
+  });
+});
 
 function restartGame() {
   isSetup = true;

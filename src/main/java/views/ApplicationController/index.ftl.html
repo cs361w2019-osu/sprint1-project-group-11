@@ -3,44 +3,83 @@
 
 <@layout.myLayout "Battleship">
 
-<div class="game_container">
-  <div class="title">Battleship</div>
+<div class="container game_container">
 
-  <div class="game_holder">
-    <div class="grid_holder">
+  <div class="row">
+    <div class="title col">
+      Battleship
+    </div>
+    <hr class="col-12">
+  </div>
+
+  <div class="row">
+    <div class="col-5">
       <div class="enemy_title">
         Attack Enemy
       </div>
       <table id="opponent" class="battleGrid"></table>
     </div>
 
-    <div class="grid_holder">
+    <div class="col-2">
+      <img src="/assets/images/attack_key.png" class="key_image" width="100%">
+      <button type="button" class="btn btn-danger" id="restart_game">
+        <i class="fas fa-redo"></i>
+        RESTART GAME
+      </button>
+    </div>
+
+    <div class="col-5">
       <div class="you_title">
         Your Ships
       </div>
       <table id="player" class="battleGrid"></table>
     </div>
 
-    <div class="game_bottom">
-
-      <div class="game_info">
-        <img src="/assets/images/attack_key.png" width="60%">
-      </div>
-
-      <div class="game_buttons">
-        <button type="button" class="btn btn-outline-dark btn_col" id="place_minesweeper">Place Minesweeper</button>
-        <button type="button" class="btn btn-outline-dark btn_col" id="place_destroyer">Place Destroyer</button>
-        <button type="button" class="btn btn-outline-dark btn_col" id="place_battleship">Place Battleship</button>
-        <button type="button" class="btn btn-outline-dark btn_col" id="sonar_button">Use Sonar</button>
-        <input type="checkbox" name="checkboxG1" class="btn_col css-checkbox" id="is_vertical"/><label for="is_vertical" class="css-label">VERTICAL</label>
-      </div>
-
-    </div>
-
-    <button type="button" class="btn btn-danger" id="restart_game"><i class="fas fa-redo"></i>RESTART GAME</button>
+    <hr class="col-12">
 
   </div>
+
+
+
+  <div class="row">
+    <div class="col-4">
+      <div class="subtitle">
+        Commands
+      </div>
+      <hr class="col-6">
+      <button type="button" class="btn btn-outline-dark" id="move_north">Move North</button>
+      <button type="button" class="btn btn-outline-dark" id="move_east">Move East</button>
+      <button type="button" class="btn btn-outline-dark" id="move_south">Move South</button>
+      <button type="button" class="btn btn-outline-dark" id="move_west">Move West</button>
+      <button type="button" class="btn btn-outline-dark" id="sonar_button">Use Sonar</button>
+    </div>
+
+    <div class="col-4">
+      <div class="subtitle">
+        Ships
+      </div>
+      <hr class="col-6">
+      <button type="button" class="btn btn-outline-dark" id="place_minesweeper">Place Minesweeper</button>
+      <button type="button" class="btn btn-outline-dark" id="place_destroyer">Place Destroyer</button>
+      <button type="button" class="btn btn-outline-dark" id="place_battleship">Place Battleship</button>
+      <button type="button" class="btn btn-outline-dark" id="place_submarine">Place Submarine</button>
+    </div>
+
+    <div class="col-4">
+      <div class="subtitle">
+        Options
+      </div>
+      <hr class="col-6">
+      <input type="checkbox" name="checkboxG1" class="css-checkbox" id="is_vertical"/><label for="is_vertical" class="css-label">Vertical Ship</label>
+      <input type="checkbox" name="checkboxG1" class="css-checkbox" id="submerge_button"/><label for="submerge_button" class="css-label">Submerge Ship</label>
+    </div>
+
+
+  </div>
+
+
 </div>
+
 
   <div class="start_page fullscreen">
     <div class="start_title">

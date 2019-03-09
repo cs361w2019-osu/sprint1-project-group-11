@@ -17,13 +17,13 @@ html {
 .battleGrid tr {
     border: 1px solid black;
     height: 30px;
-    border-radius: 3px;
+    border-radius: 15px;
 }
 
 .battleGrid td {
     border: 1px solid black;
     width: 30px;
-    border-radius: 3px;
+    border-radius: 15px;
 }
 
 td:hover {
@@ -69,6 +69,7 @@ td:hover {
   font-weight: 700;
   font-size: 72px;
   margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .enemy_title {
@@ -87,38 +88,14 @@ td:hover {
   margin-bottom: 5px;
 }
 
-.grid_holder {
-  display: inline-block;
-  margin: 40px;
-  margin-bottom: 0;
-}
-
 .game_bottom {
   height: 250px;
 }
 
-.game_info {
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  margin-right: 70px;
-}
-
-.game_buttons {
-  display: inline-block;
-  margin-right: 50px;
-  margin-left: 50px;
-}
-
 .btn {
-  font-weight: 700;
+  font-weight: 500;
   width: 200px;
-}
-
-.btn_col {
-  display: block;
-  margin: 10px auto;
-  text-align: center;
+  margin-bottom: 5px;
 }
 
 input[type=checkbox].css-checkbox {
@@ -162,28 +139,13 @@ label.css-label {
   user-select: none;
 }
 
-.fas {
-  margin-right: 10px;
-}
 
 #restart_game {
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  font-size: 24px;
-  width: 400px;
-  margin-top: 60px;
-}
-
-#place_minesweeper {
-  font-size: 18px;
-}
-
-#place_destroyer {
-  font-size: 18px;
-}
-
-#place_battleship {
-  font-size: 18px;
+  font-size: 13px;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .game_container {
@@ -241,4 +203,14 @@ label.css-label {
 
 .goAway {
     display: none;
+}
+
+.key_image {
+  margin-top: 150px;
+}
+
+.subtitle {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
