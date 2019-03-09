@@ -19,7 +19,7 @@ public class ShipTest {
         assertEquals(2, ship3.getOccupiedSquares().size());
         
         Ship ship4 = new Ship("SUBMARINE");
-        assertEquals(5, ship3.getOccupiedSquares().size());
+        assertEquals(5, ship4.getOccupiedSquares().size());
         
 
     }
