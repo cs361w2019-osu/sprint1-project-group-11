@@ -47,34 +47,38 @@ public class BoardTest {
     }
 	
 	@Test
-	 public void testMoveShip()
+	 public void testMoveNorth()
 	 {
 		Board board = new Board ();
-		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
 		moveNorth();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getColumn() == 'D');
 	 }
 	 
 	@Test
-	 public void testMoveShip()
+	 public void testMoveSouth()
 	 {
 		Board board = new Board ();
-		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
 		moveSouth();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getColumn() == 'F');
 	 }
 
 	@Test
-	 public void testMoveShip()
+	 public void testMoveEast()
 	 {
 		Board board = new Board ();
-		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
 		moveEast();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getRow() == 5);
 	 }
 	
 	@Test
-	 public void testMoveShip()
+	 public void testMoveWest()
 	 {
 		Board board = new Board ();
-		board.move(new Ship('MINESWEEPER'), 4, 'E', true);
+		board.placeShip(new Ship('MINESWEEPER'), 4, 'E', true);
 		moveWest();
+		assertTrue(board.getShips().get(0).getOccupiedSquares().get(0).getRow() == 3);
 	 }
 }
