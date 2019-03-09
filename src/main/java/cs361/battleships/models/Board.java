@@ -142,6 +142,49 @@ public class Board {
 			return hitResult;
 		}
 	}
+	
+		public List<Square> sonar(Game g, int x, char y) {
+
+			List<Square> occupiedSquares = new ArrayList<>();
+			List<Square> sonarSquares = new ArrayList<>();
+			List<Square> matchedSquares = new ArrayList<>();
+
+			int targetRow = x;
+			char targetCol = y;
+
+			for (int i = 0; i < g.otherShips().size(); i++) {
+				for (int j = 0; j < g.otherShips().get(i).getOccupiedSquares().size(); j++) {
+					occupiedSquares.add(g.otherShips().get(i).getOccupiedSquares().get(j));
+				}
+			}
+
+			sonarSquares.add(new Square(targetRow - 2, targetCol));
+			sonarSquares.add(new Square(targetRow - 1, targetCol));
+			sonarSquares.add(new Square(targetRow, targetCol));
+			sonarSquares.add(new Square(targetRow + 1, targetCol));
+			sonarSquares.add(new Square(targetRow + 2, targetCol));
+
+			sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol + 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol + 2)));
+
+			sonarSquares.add(new Square(targetRow - 1, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow + 1, (char) ((int) targetCol - 1)));
+			sonarSquares.add(new Square(targetRow, (char) ((int) targetCol - 2)));
+
+			for (int i = 0; i < occupiedSquares.size(); i++) {
+				for (int j = 0; j < sonarSquares.size(); j++) {
+					if (occupiedSquares.get(i).equals(sonarSquares.get(j))) {
+						matchedSquares.add(occupiedSquares.get(i));
+					}
+				}
+			}
+
+			return matchedSquares;
+
+	}
 
 	public List<Ship> getShips() {
 		return ships;
@@ -157,5 +200,263 @@ public class Board {
 
 	public void setAttacks(List<Result> attacks) {
 		this.attacks = attacks;
+	}
+	
+	public List<Ship> moveNorth() {
+
+		List<Ship> playerShips = ships;
+
+		if (moveCmdsAvailable > 0) {
+			Collections.sort(playerShips, new Comparator<Ship>() {
+				@Override
+				public int compare(Ship s1, Ship s2) {
+					int s1Pos = s1.getOccupiedSquares().get(0).getRow();
+					int s2Pos = s2.getOccupiedSquares().get(0).getRow();
+
+					for (int i = 0; i < s1.getOccupiedSquares().size(); i++) {
+						if (s1.getOccupiedSquares().get(i).getRow() < s1Pos) {
+							s1Pos = s1.getOccupiedSquares().get(i).getRow();
+						}
+					}
+
+					for (int i = 0; i < s2.getOccupiedSquares().size(); i++) {
+						if (s2.getOccupiedSquares().get(i).getRow() < s2Pos) {
+							s2Pos = s2.getOccupiedSquares().get(i).getRow();
+						}
+					}
+
+					return s1Pos - s2Pos;
+				}
+			});
+
+			for (int i = 0; i < playerShips.size(); i++) {
+				boolean canMove = true;
+
+				for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) { // Checks if ship will be off board if moved
+					if (playerShips.get(i).getOccupiedSquares().get(j).getRow() - 1 <= 0) {
+						canMove = false;
+					}
+				}
+
+				for (int j = 0; j < i; j++) { // Checks if current ship will overlap with any previous ships
+					for (int k = 0; k < playerShips.get(j).getOccupiedSquares().size(); k++) {
+						for (int z = 0; z < playerShips.get(i).getOccupiedSquares().size(); z++) {
+							if (playerShips.get(j).getOccupiedSquares().get(k).getRow() == playerShips.get(i).getOccupiedSquares().get(z).getRow() - 1) {       // Do they have same row after the move?
+								if (playerShips.get(i).getOccupiedSquares().get(z).getColumn() == playerShips.get(j).getOccupiedSquares().get(k).getColumn()) { // Do they have same column?
+									if (playerShips.get(i).getOccupiedSquares().get(z).getSubmerged() == playerShips.get(j).getOccupiedSquares().get(k).getSubmerged()) {   // Do they both have same submerge value?
+										canMove = false;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (canMove) {
+					for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) {
+						playerShips.get(i).getOccupiedSquares().get(j).setRow(playerShips.get(i).getOccupiedSquares().get(j).getRow() - 1);
+					}
+				}
+
+			}
+
+			moveCmdsAvailable = moveCmdsAvailable - 1;
+		}
+
+		return playerShips;
+	}
+
+	public List<Ship> moveEast() {
+
+		List<Ship> playerShips = ships;
+
+		if (moveCmdsAvailable > 0) {
+			Collections.sort(playerShips, new Comparator<Ship>() {
+				@Override
+				public int compare(Ship s1, Ship s2) {
+					int s1Pos = (int) (s1.getOccupiedSquares().get(0).getColumn());
+					int s2Pos = (int) (s2.getOccupiedSquares().get(0).getColumn());
+
+					for (int i = 0; i < s1.getOccupiedSquares().size(); i++) {
+						if ((int) (s1.getOccupiedSquares().get(i).getColumn()) < s1Pos) {
+							s1Pos = (int) (s1.getOccupiedSquares().get(i).getColumn());
+						}
+					}
+
+					for (int i = 0; i < s2.getOccupiedSquares().size(); i++) {
+						if ((int) (s2.getOccupiedSquares().get(i).getColumn()) < s2Pos) {
+							s2Pos = (int) (s2.getOccupiedSquares().get(i).getColumn());
+						}
+					}
+
+					return s2Pos - s1Pos;
+				}
+			});
+
+			for (int i = 0; i < playerShips.size(); i++) {
+
+				boolean canMove = true;
+
+				for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) { // Checks if ship will be off board if moved
+					if ((int) (playerShips.get(i).getOccupiedSquares().get(j).getColumn()) + 1 > 74) {
+						canMove = false;
+					}
+				}
+
+				for (int j = 0; j < i; j++) { // Checks if current ship will overlap with any previous ships
+					for (int k = 0; k < playerShips.get(j).getOccupiedSquares().size(); k++) {
+						for (int z = 0; z < playerShips.get(i).getOccupiedSquares().size(); z++) {
+							if ((int) (playerShips.get(j).getOccupiedSquares().get(k).getColumn()) == (int) (playerShips.get(i).getOccupiedSquares().get(z).getColumn()) + 1) {       // Do they have same column after the move?
+								if (playerShips.get(i).getOccupiedSquares().get(z).getRow() == playerShips.get(j).getOccupiedSquares().get(k).getRow()) { // Do they have same row?
+									if (playerShips.get(i).getOccupiedSquares().get(z).getSubmerged() == playerShips.get(j).getOccupiedSquares().get(k).getSubmerged()) {   // Do they both have same submerge value?
+										canMove = false;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (canMove) {
+					for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) {
+						playerShips.get(i).getOccupiedSquares().get(j).setColumn((char) ((int) (playerShips.get(i).getOccupiedSquares().get(j).getColumn()) + 1));
+					}
+				}
+
+			}
+
+			moveCmdsAvailable = moveCmdsAvailable - 1;
+		}
+
+		return playerShips;
+	}
+
+	public List<Ship> moveSouth() {
+
+		List<Ship> playerShips = ships;
+
+		if (moveCmdsAvailable > 0) {
+			Collections.sort(playerShips, new Comparator<Ship>() {
+				@Override
+				public int compare(Ship s1, Ship s2) {
+					int s1Pos = s1.getOccupiedSquares().get(0).getRow();
+					int s2Pos = s2.getOccupiedSquares().get(0).getRow();
+
+					for (int i = 0; i < s1.getOccupiedSquares().size(); i++) {
+						if (s1.getOccupiedSquares().get(i).getRow() < s1Pos) {
+							s1Pos = s1.getOccupiedSquares().get(i).getRow();
+						}
+					}
+
+					for (int i = 0; i < s2.getOccupiedSquares().size(); i++) {
+						if (s2.getOccupiedSquares().get(i).getRow() < s2Pos) {
+							s2Pos = s2.getOccupiedSquares().get(i).getRow();
+						}
+					}
+
+					return s2Pos - s1Pos;
+				}
+			});
+
+			for (int i = 0; i < playerShips.size(); i++) {
+				boolean canMove = true;
+
+				for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) { // Checks if ship will be off board if moved
+					if (playerShips.get(i).getOccupiedSquares().get(j).getRow() + 1 > 10) {
+						canMove = false;
+					}
+				}
+
+				for (int j = 0; j < i; j++) { // Checks if current ship will overlap with any previous ships
+					for (int k = 0; k < playerShips.get(j).getOccupiedSquares().size(); k++) {
+						for (int z = 0; z < playerShips.get(i).getOccupiedSquares().size(); z++) {
+							if (playerShips.get(j).getOccupiedSquares().get(k).getRow() == playerShips.get(i).getOccupiedSquares().get(z).getRow() + 1) {       // Do they have same row after the move?
+								if (playerShips.get(i).getOccupiedSquares().get(z).getColumn() == playerShips.get(j).getOccupiedSquares().get(k).getColumn()) { // Do they have same column?
+									if (playerShips.get(i).getOccupiedSquares().get(z).getSubmerged() == playerShips.get(j).getOccupiedSquares().get(k).getSubmerged()) {   // Do they both have same submerge value?
+										canMove = false;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (canMove) {
+					for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) {
+						playerShips.get(i).getOccupiedSquares().get(j).setRow(playerShips.get(i).getOccupiedSquares().get(j).getRow() + 1);
+					}
+				}
+
+			}
+
+			moveCmdsAvailable = moveCmdsAvailable - 1;
+		}
+
+		return playerShips;
+	}
+
+	public List<Ship> moveWest() {
+
+		List<Ship> playerShips = ships;
+
+		if (moveCmdsAvailable > 0) {
+			Collections.sort(playerShips, new Comparator<Ship>() {
+				@Override
+				public int compare(Ship s1, Ship s2) {
+					int s1Pos = (int) (s1.getOccupiedSquares().get(0).getColumn());
+					int s2Pos = (int) (s2.getOccupiedSquares().get(0).getColumn());
+
+					for (int i = 0; i < s1.getOccupiedSquares().size(); i++) {
+						if ((int) (s1.getOccupiedSquares().get(i).getColumn()) < s1Pos) {
+							s1Pos = (int) (s1.getOccupiedSquares().get(i).getColumn());
+						}
+					}
+
+					for (int i = 0; i < s2.getOccupiedSquares().size(); i++) {
+						if ((int) (s2.getOccupiedSquares().get(i).getColumn()) < s2Pos) {
+							s2Pos = (int) (s2.getOccupiedSquares().get(i).getColumn());
+						}
+					}
+
+					return s1Pos - s2Pos;
+				}
+			});
+
+			for (int i = 0; i < playerShips.size(); i++) {
+
+				boolean canMove = true;
+
+				for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) { // Checks if ship will be off board if moved
+					if ((int) (playerShips.get(i).getOccupiedSquares().get(j).getColumn()) - 1 < 65) {
+						canMove = false;
+					}
+				}
+
+				for (int j = 0; j < i; j++) { // Checks if current ship will overlap with any previous ships
+					for (int k = 0; k < playerShips.get(j).getOccupiedSquares().size(); k++) {
+						for (int z = 0; z < playerShips.get(i).getOccupiedSquares().size(); z++) {
+							if ((int) (playerShips.get(j).getOccupiedSquares().get(k).getColumn()) == (int) (playerShips.get(i).getOccupiedSquares().get(z).getColumn()) - 1) {       // Do they have same column after the move?
+								if (playerShips.get(i).getOccupiedSquares().get(z).getRow() == playerShips.get(j).getOccupiedSquares().get(k).getRow()) { // Do they have same row?
+									if (playerShips.get(i).getOccupiedSquares().get(z).getSubmerged() == playerShips.get(j).getOccupiedSquares().get(k).getSubmerged()) {   // Do they both have same submerge value?
+										canMove = false;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (canMove) {
+					for (int j = 0; j < playerShips.get(i).getOccupiedSquares().size(); j++) {
+						playerShips.get(i).getOccupiedSquares().get(j).setColumn((char) ((int) (playerShips.get(i).getOccupiedSquares().get(j).getColumn()) - 1));
+					}
+				}
+
+			}
+
+			moveCmdsAvailable = moveCmdsAvailable - 1;
+		}
+
+		return playerShips;
 	}
 }

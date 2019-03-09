@@ -7,16 +7,16 @@ import static org.junit.Assert.assertEquals;
 public class ShipTest {
 
     @Test
-    public void testHealth() {
+    public void testSize() {
 
         Ship ship1 = new Ship("BATTLESHIP");
-        assertEquals(4, s1.getHealth());
+        assertEquals(4, ship1.getOccupiedSquares().size());
 
         Ship ship2 = new Ship("DESTROYER");
-        assertEquals(3, s2.getHealth());
+        assertEquals(3, ship2.getOccupiedSquares().size());
 
         Ship ship3 = new Ship("MINESWEEPER");
-        assertEquals(2, s3.getHealth());
+        assertEquals(2, ship3.getOccupiedSquares().size());
 
     }
 }
